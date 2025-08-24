@@ -39,6 +39,19 @@ async function findOneValidByToken(sessionToken) {
     return results.rows[0];
   }
 }
+async function expireById(sessionId) {
+  const expiredSessionObject = await runUpdateQuery(sessionId);
+  return expiredSessionObject;
+
+  async function runUpdateQuery(sessionId) {
+    const results = await database.query({
+      text: "UPDATE sessions SET expires_at = expires_at - interval '1 year', updated_at = NOW() WHERE id = $1 RETURNING *",
+      values: [sessionId],
+    });
+
+    return results.rows[0];
+  }
+}
 async function renew(sessionId) {
   const expiresAt = new Date(Date.now() + EXPIRATION_IN_MILLISECONDS);
   const renewedSessionObject = await runUpdateQuery(sessionId, expiresAt);
@@ -56,6 +69,7 @@ async function renew(sessionId) {
 const session = {
   create,
   renew,
+  expireById,
   findOneValidByToken,
   EXPIRATION_IN_MILLISECONDS,
 };
