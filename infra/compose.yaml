@@ -1,4 +1,10 @@
 services:
+  mailcatcher:
+    container_name: "mailcatcher-dev"
+    image: "sj26/mailcatcher"
+    ports:
+      - "1025:1025"
+      - "1080:1080"
   database:
     container_name: "postgres-dev"
     image: "postgres:16.0-alpine3.18"
