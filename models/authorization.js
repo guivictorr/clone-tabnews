@@ -1,5 +1,4 @@
 import { InternalServerError } from "infra/errors";
-import { validate } from "uuid";
 
 const availableFeatures = [
   "read:user",
